@@ -18,7 +18,9 @@ class App extends Component {
     return (
       <div className="App">
         {this.state.score ?
-          <div id="score">Your score is: {this.state.score}</div>
+          <div id="score">Game Over!
+            <div>Your score is: {this.state.score}</div>
+          </div>
           :<GameBoard claculateScore={this.claculateScore} />
         }
       </div>
