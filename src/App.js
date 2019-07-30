@@ -5,11 +5,13 @@ import GameBoard from './gameBoard/GameBoard'
 class App extends Component {
 
   state = {
-    score: undefined
+    score: undefined,
+    topScore: 100,
+    pointForWrongClick: 5
   }
   
   claculateScore = (wrongClick) => {
-    const score = 100 - (5 * wrongClick)
+    const score = this.state.topScore - (this.state.pointForWrongClick * wrongClick)
     this.setState({score:score})
   }
 
