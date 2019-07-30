@@ -1,4 +1,30 @@
 #gameBoard{
+    /* display: grid;
+    grid-template-columns: auto auto auto auto; */
+}
+
+.cards{
+    background-color: #F8EFBA;
     display: grid;
     grid-template-columns: auto auto auto auto;
+    margin: auto;
+}
+
+.startButton{
+    background-color: #8e44ad;
+    border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-size: 50px;
+  height: 150px;
+  width: 250px;
+  margin-top: 200px;
+  -webkit-box-shadow: 3px -2px 59px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px -2px 59px -4px rgba(0,0,0,0.75);
+  box-shadow: 3px -2px 59px -4px rgba(0,0,0,0.75);
 }

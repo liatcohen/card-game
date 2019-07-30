@@ -11,8 +11,8 @@ class card extends Component {
   render() {
 
     return (
-      <div class="card">
-        <div class={this.props.class}
+      <div className="">
+        <div className={"card "+this.props.class}
           cardId={this.props.cardId}
           onClick={this.props.disabled || this.props.class === "front" ? undefined : this.cardClicked}>
           {this.props.class === "front" ? this.props.number : ""}

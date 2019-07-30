@@ -7,61 +7,105 @@ class gameBoard extends Component {
     state = {
         card1: undefined,
         card1ID: undefined,
-        cardFlip: new Array(12).fill(false),
+        cardFlip: new Array(20).fill(false),
         disabled: false,
-        wrongClick: 0
+        wrongClick: 0,
+        numberOfCards: 12,
+        cards: null,
+
     }
 
     cardClicked = (number, id) => {
-        let newCardFlip = [...this.state.cardFlip]
-        newCardFlip[parseInt(id) - 1 + ""]=true
-        if (this.state.card1){
-            this.setState({ cardFlip: newCardFlip, disabled: true })
+        // let newCardFlip = [...this.state.cardFlip]
+        // newCardFlip[parseInt(id) - 1 + ""] = true
+
+        let newCards = [...this.state.cards]
+        newCards[id].cardFlipped = true
+        if (this.state.card1) {
+            this.setState({ cards:newCards, disabled: true })
             if (this.state.card1 === number) {
                 this.setState({ card1: undefined, disabled: false })
-                this.checkIfGameOver(newCardFlip)
+                this.checkIfGameOver(newCards)
             } else {
                 setTimeout(() => {
-                    newCardFlip[parseInt(id) - 1 + ""] = false
-                    newCardFlip[parseInt(this.state.card1ID) - 1 + ""] = false
-                    this.setState({cardFlip:newCardFlip, card1: undefined, disabled: false, wrongClick: this.state.wrongClick+1 })
+                    // newCardFlip[parseInt(id) - 1 + ""] = false
+                    // newCardFlip[parseInt(this.state.card1ID) - 1 + ""] = false
+
+                    newCards[id].cardFlipped = false
+                    newCards[this.state.card1ID].cardFlipped = false
+                    this.setState({ cards:newCards, card1: undefined, disabled: false, wrongClick: this.state.wrongClick + 1 })
+                    // this.setState({ cardFlip: newCardFlip, card1: undefined, disabled: false, wrongClick: this.state.wrongClick + 1 })
                 }, 1000);
             }
 
         } else {
-            this.setState({ cardFlip: newCardFlip, card1: number, card1ID: id, firstCardFlipped: true })
+            this.setState({ cards: newCards, card1: number, card1ID: id, firstCardFlipped: true })
         }
     }
 
-    checkIfGameOver(newCardFlip) {
-        if (newCardFlip.every(c => c === true)) {
+    checkIfGameOver(cards) {
+        if (cards.every(c => c.cardFlipped === true)) {
+            console.log("GAME OVER")
             this.props.claculateScore(this.state.wrongClick)
         }
     }
-   
-    
-    render() {
 
+    fillCards = () => {
+        let NumOfCardsChosen = 0
+        const cardsOptions = [], cardsArray = []
+        for (let i = 0; i < this.state.numberOfCards / 2; i++) {
+            cardsOptions[i] = 2
+        }
+        console.log(cardsOptions)
+        // cardsArray.forEach(c=> c=2)
+        // Math.floor(Math.random() * Math.floor(numberOfCards)
+        let id = 0;
+        while (NumOfCardsChosen < this.state.numberOfCards) {
+            let number = Math.ceil(Math.random() * Math.floor(this.state.numberOfCards / 2))
+            console.log(`number: ${number}, cardsOptions[number-1]:${cardsOptions[number - 1]}`)
+            if (cardsOptions[number - 1] > 0) {
+                // cardsArray[index] = number
+                cardsOptions[number - 1] = cardsOptions[number - 1] - 1
+                NumOfCardsChosen++
+                // index++
+                cardsArray.push({
+                    number: number,
+                    id: id,
+                    cardFlipped: false,
+                    class: "back"
+                })
+                id++
+            }
+        }
+
+        console.log(cardsArray)
+        this.setState({ cards: cardsArray })
+     
+
+    }
+    render() {
+        
         return (
+
             <div id="gameBoard">
-                <Card number="1"
-                    cardId="1"
-                    class={this.state.cardFlip[0] ? "front" : "back"}
-                    cardClicked={this.cardClicked}
-                    disabled={this.state.disabled}>
-                </Card>
-                <Card number="2" cardId="2" class={this.state.cardFlip[1] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="3" cardId="3" class={this.state.cardFlip[2] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="4" cardId="4" class={this.state.cardFlip[3] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="5" cardId="5" class={this.state.cardFlip[4] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="6" cardId="6" class={this.state.cardFlip[5] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="1" cardId="7" class={this.state.cardFlip[6] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="2" cardId="8" class={this.state.cardFlip[7] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="3" cardId="9" class={this.state.cardFlip[8] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="4" cardId="10" class={this.state.cardFlip[9] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="5" cardId="11" class={this.state.cardFlip[10] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-                <Card number="6" cardId="12" class={this.state.cardFlip[11] ? "front" : "back"} cardClicked={this.cardClicked} disabled={this.state.disabled}></Card>
-            </div>
+               
+                {this.state.cards ?
+                    <div className="cards">
+                        {this.state.cards.map((card, idx) =>{
+                        return (
+                            <Card number={card.number}
+                                    cardId={card.id}
+                                    class={card.cardFlipped? "front":"back"}
+                                    cardClicked={this.cardClicked}
+                                    disabled={this.state.disabled}>
+                             </Card>
+                        )
+                    })}
+                    </div>
+                    :
+                    <button class="startButton" onClick={this.fillCards}>Start Game</button>
+                }
+               </div>
         );
     }
 }
